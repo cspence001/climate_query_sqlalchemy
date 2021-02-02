@@ -34,12 +34,20 @@ app = Flask(__name__)
 def home():
     return (
         f"Welcome to the Climate API!<br/>"
+        f"<br/>"
         f"Available Routes:<br/>"
+        f"<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
-        f"/api/v1.0/<start>/<end><br/>"
+        f"/api/v1.0/start/<start><br/>"
+        f"/api/v1.0/start/end/<start><end><br/>"
+        f"<br/>"
+        f"*Enter dates in YYYY-MM-DD format.<br/>"
+        f"*Example: /api/v1.0/start/2015-08-27/end/2016-01-27<br/>"
+        f"<br>"
+        f"Note: Data acquistion for start and end dates must be<br/>"
+        f"within the date ranges of 2010-01-01 and 2017-08-23."
     )
 
 # 4. API STATIC ROUTE (precipitation route)
@@ -85,30 +93,43 @@ def temperatures():
     
     return jsonify(station_temps)
 
-# 7. API DYNAMIC ROUTE (start route) processing
-@app.route("/api/v1.0/<start>")
-def start():
+# 7. API DYNAMIC ROUTE (start route) processing (ref= chinook_db)
+@app.route("/api/v1.0/start/<start>")
+def start(start):
     session = Session(engine)
+
+    year, month, day = map(int, start.split('-'))
+    date = dt.date(year, month, day)
     
-    ''' input 
-    start_date = input("Enter a date in YYYY-MM-DD format")
-    year, month, day = map(int, start_date.split('-'))
-    date1 = dt.date(year, month, day)
-    '''
-    start_dt = dt.datetime(2016, 8, 1)
-    
-    results = session.query(measurement.date, func.tmin(measurement.tobs)).\
-        filter(measurement.date >= start_dt).all()
-        
+    results = session.query(measurement.date, func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs)).\
+        filter(measurement.date >= date).\
+        group_by(measurement.date).\
+        order_by(measurement.date).all()
+    session.close()    
     date_selection = list(np.ravel(results))
 
     return jsonify(date_selection)
 
 # 8. API DYNAMIC ROUTE (start/end route)
-#@app.route("/api/v1.0/<start>/<end>")
-#def start_end():
+@app.route("/api/v1.0/start/<start>/end/<end>")
+def start_end(start, end):
+    session = Session(engine)
 
+    year, month, day = map(int,start.split('-'))
+    date = dt.date(year, month, day)
 
+    year, month, day = map(int,end.split('-'))
+    end_date = dt.date(year, month, day)
+
+    results = session.query(measurement.date, func.min(measurement.tobs), func.max(measurement.tobs), func.avg(measurement.tobs)).\
+        filter(measurement.date >= date).\
+        filter(measurement.date <= end_date).\
+        group_by(measurement.date).\
+        order_by(measurement.date).all()
+    session.close()    
+    date_selection = list(np.ravel(results))
+
+    return jsonify(date_selection)
 
 # Define our main behavior
 if __name__ == "__main__":
