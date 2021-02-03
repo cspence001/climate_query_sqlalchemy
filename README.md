@@ -10,4 +10,4 @@ Two Bonus Temperatures analysis were also conducted and are contained within the
 <li>The second, Temperature Analysis II, conducts a study looking into the historical data for a selected week of August to compare temperatures in previous years for the week. A calculation for minimum, maximum, and average temperature were queried and plotted into a bar chart. For that same week, a Daily Rainfall Average analysis was conducted and plotted into an area plot to show the daily normals for each date in the week with calculations of a=minimum, maximum, and average precipitation measurements.[Temp_Analysis_II.ipynb]</br></li>
 </ul>
 
-The [Resources] folder contains two csv files for the data, hawaii_measurements.csv and stations_measurements.csv both join on Station id. 
+The [Resources] folder contains two csv files for the data, hawaii_measurements.csv and stations_measurements.csv both join on Station.
