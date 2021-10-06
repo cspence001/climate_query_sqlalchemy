@@ -1,4 +1,4 @@
-# sqlalchemy_challenge
+# climate_query_sqlalchemy
 
 This analysis is a data exploration of a climate database. Using SQLAlchemy ORM queries, Pandas, and Matplotlib, analysis were conducted for temperature and precipitation measurements with queries into dates, date ranges, and locations. A precipitation analysis was conducted by querying 12 months of precipitation data and plotted within a chart for the date ranges marked by precipitation in Inches. Calculations were conducted for a Station Analysis to inquire on the most active station in the dataset(i.e. the station with the highest number of observations). Using that Station ID, calculations were conducted to find the lowest, highest and average temperature for a years time of station data and plotted within a histogram for temperature ranges on a y-axis of frequency counts. [climate_starter.ipynb]</br>
 
